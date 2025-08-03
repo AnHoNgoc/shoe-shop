@@ -11,6 +11,7 @@
   "author": "Ho Ngoc An",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.28.0",
     "@upstash/redis": "^1.35.3",
     "bcrypt": "^5.1.1",
     "body-parser": "^2.2.0",
