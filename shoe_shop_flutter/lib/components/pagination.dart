@@ -29,12 +29,12 @@ class Pagination extends StatelessWidget {
               currentPage == page ? AppColors.blue : AppColors.transparent,
               foregroundColor:
               currentPage == page ? AppColors.white : AppColors.black,
-              minimumSize: Size(36.w, 36.h),
+              minimumSize: Size(30.w, 30.h),
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
             ),
             child: Text(
               '$page',
-              style: TextStyle(fontSize: 14.sp),
+              style: TextStyle(fontSize: 12.sp),
             ),
           ),
         ),
@@ -83,7 +83,7 @@ class Pagination extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.h),
+      padding: EdgeInsets.symmetric(vertical: 2.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

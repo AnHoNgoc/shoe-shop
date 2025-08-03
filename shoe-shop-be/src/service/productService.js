@@ -92,6 +92,25 @@ const createNewProduct = async (data) => {
     }
 };
 
+const deleteProduct = async (id) => {
+    try {
+        await db.Product.destroy({
+            where: {
+                id: id,
+            },
+        });
+        return {
+            EM: "Product deleted successfully",
+            EC: 0,
+        }
+    } catch (error) {
+        return {
+            EM: "Server error",
+            EC: -1,
+        };
+    }
+}
+
 const getProductById = async (id) => {
     try {
         const data = await db.Product.findOne({
@@ -139,6 +158,6 @@ const getProductById = async (id) => {
 };
 
 export {
-    getProductList, getAllProducts, createNewProduct, getProductById
+    getProductList, getAllProducts, createNewProduct, deleteProduct, getProductById
 }
 

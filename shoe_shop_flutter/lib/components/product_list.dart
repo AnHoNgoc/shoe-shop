@@ -40,8 +40,8 @@ class _ProductListState extends State<ProductList> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       try {
-        _authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-        _favoriteViewModel = Provider.of<FavoriteViewModel>(context, listen: false);
+        _authViewModel = context.read<AuthViewModel>();
+        _favoriteViewModel = context.read<FavoriteViewModel>();
 
         if (_authViewModel.isLoggedIn && _authViewModel.userId != null) {
           _favoriteViewModel.fetchFavorites();
@@ -157,14 +157,13 @@ class _ProductCardState extends State<ProductCard> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _favoriteViewModel = Provider.of<FavoriteViewModel>(context);
-    _cartViewModel = Provider.of<CartViewModel>(context);
-    _authViewModel = Provider.of<AuthViewModel>(context);
+    _favoriteViewModel = context.read<FavoriteViewModel>();
+    _cartViewModel = context.read<CartViewModel>();
+    _authViewModel = context.read<AuthViewModel>();
 
     if (!_isFetched && _authViewModel.isLoggedIn) {
       _isFetched = true;
 
-      // Gọi sau build để tránh setState trong build phase
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _cartViewModel.fetchCart();
       });
@@ -197,11 +196,16 @@ class _ProductCardState extends State<ProductCard> {
     }
 
     final confirm = await DialogAddCart.showLogoutConfirmationDialog(context);
+
+
     if (confirm) {
+
       try {
         await _cartViewModel.addCartItem(widget.id);
+        if (!context.mounted) return;
         AppSnackBar.showSuccess(context, 'Product added to cart!');
       } catch (e) {
+        if (!context.mounted) return;
         AppSnackBar.showError(context, e.toString());
       }
     }
@@ -209,8 +213,6 @@ class _ProductCardState extends State<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
-    final isFavorite = _favoriteViewModel.isFavorite(widget.id);
-    final quantityInCart = _cartViewModel.getQuantityInCart(widget.id);
 
     return GestureDetector(
       onTap: () {
@@ -243,31 +245,36 @@ class _ProductCardState extends State<ProductCard> {
                 Positioned(
                   top: 8.h,
                   left: 8.w,
-                  child: GestureDetector(
-                    onTap: () => handleFavoriteTap(context),
-                    child: Container(
-                      padding: EdgeInsets.all(6.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.grey.shade400,
-                          width: 1.5.w,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
+                  child: Consumer<FavoriteViewModel>(
+                    builder: (context, favoriteViewModel, _) {
+                      final isFavorite = favoriteViewModel.isFavorite(widget.id);
+                      return GestureDetector(
+                        onTap: () => handleFavoriteTap(context),
+                        child: Container(
+                          padding: EdgeInsets.all(6.w),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.9),
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.grey.shade400,
+                              width: 1.5.w,
+                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Icon(
-                        isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: isFavorite ? Colors.red : Colors.grey,
-                        size: 20.w,
-                      ),
-                    ),
+                          child: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite ? Colors.red : Colors.grey,
+                            size: 20.w,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -300,38 +307,43 @@ class _ProductCardState extends State<ProductCard> {
                           fontSize: 14.sp,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () => handleAddToCartTap(context),
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Icon(
-                              Icons.shopping_cart_outlined,
-                              color: Colors.black87,
-                              size: 22.w,
-                            ),
-                            if (quantityInCart > 0)
-                              Positioned(
-                                right: -6.w,
-                                top: -6.h,
-                                child: Container(
-                                  padding: EdgeInsets.all(3.w),
-                                  decoration: BoxDecoration(
-                                    color: Colors.redAccent,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Text(
-                                    '$quantityInCart',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.bold,
+                      Consumer<CartViewModel>(
+                        builder: (context, cartViewModel, _) {
+                          final quantityInCart = cartViewModel.getQuantityInCart(widget.id);
+                          return GestureDetector(
+                            onTap: () => handleAddToCartTap(context),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Icon(
+                                  Icons.shopping_cart_outlined,
+                                  color: Colors.black87,
+                                  size: 22.w,
+                                ),
+                                if (quantityInCart > 0)
+                                  Positioned(
+                                    right: -6.w,
+                                    top: -6.h,
+                                    child: Container(
+                                      padding: EdgeInsets.all(3.w),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.redAccent,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Text(
+                                        '$quantityInCart',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                          ],
-                        ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

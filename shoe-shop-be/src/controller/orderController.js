@@ -1,12 +1,13 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import { checkout, getOrdersByUserId } from "../service/orderService";
+import { checkout, getOrdersByUserId, updateOrderStatus, deleteOrderById, getOrderList } from "../service/orderService";
 import Stripe from 'stripe';
 import db from "../models/index.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const handleCheckout = async (req, res) => {
+
     try {
         const user = req.user;
         const { address, phoneNumber } = req.body;
@@ -49,6 +50,7 @@ const handleCheckout = async (req, res) => {
 };
 
 const handleStripeCheckout = async (req, res) => {
+
     try {
         const user = req.user;
         const { address, phoneNumber } = req.body;
@@ -123,7 +125,6 @@ const handleStripeWebhook = async (req, res) => {
 
             const session = event.data.object;
 
-
             if (!session.metadata) {
                 return res.status(400).send('Missing metadata');
             }
@@ -143,12 +144,10 @@ const handleStripeWebhook = async (req, res) => {
                 return res.status(404).send('Cart not found');
             }
 
-
             const user = {
                 id: userWithCart.id,
                 cartId: userWithCart.Cart.id
             };
-
 
             const data = await checkout(user, address, phoneNumber);
 
@@ -172,7 +171,7 @@ const handleStripeWebhook = async (req, res) => {
 };
 
 
-const handleGetOrders = async (req, res) => {
+const handleGetOrdersByUser = async (req, res) => {
     try {
         const user = req.user;
 
@@ -201,5 +200,89 @@ const handleGetOrders = async (req, res) => {
     }
 };
 
+const handleGetOrderList = async (req, res) => {
+    try {
+        const { page, status, sort } = req.query;
 
-export { handleCheckout, handleGetOrders, handleStripeCheckout, handleStripeWebhook };
+        const data = await getOrderList({
+            page: parseInt(page) || 1,
+            status: status || null,
+            sort: sort || 'desc'
+        });
+
+        const statusCode = data.EC === 0 ? 200 : 500;
+
+        return res.status(statusCode).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT
+        });
+    } catch (err) {
+        console.error('Error in handleGetOrderList:', err);
+        return res.status(500).json({
+            EM: "Error from server",
+            EC: -1
+        });
+    }
+};
+
+const handleUpdateOrderStatus = async (req, res) => {
+    try {
+        const orderId = req.params.id;
+        const { status } = req.body;
+
+        const data = await updateOrderStatus(orderId, status);
+
+        let statusCode = 200;
+
+        if (data.EC === 1) {
+            statusCode = 400;
+        } else if (data.EC !== 0) {
+            statusCode = 500;
+        }
+
+        return res.status(statusCode).json({
+            EM: data.EM,
+            EC: data.EC
+        });
+
+    } catch (err) {
+        console.error('Error updating order status:', err);
+        return res.status(500).json({
+            EM: 'Error from server',
+            EC: -1
+        });
+    }
+};
+
+const handleDeleteOrder = async (req, res) => {
+    try {
+        const orderId = req.params.id;
+
+        const data = await deleteOrderById(orderId);
+
+        let statusCode = 200;
+
+        if (data.EC === 1) {
+            statusCode = 400;
+        } else if (data.EC !== 0) {
+            statusCode = 500;
+        }
+
+        return res.status(statusCode).json({
+            EM: data.EM,
+            EC: data.EC
+        });
+
+    } catch (err) {
+        console.error('Error deleting order:', err);
+        return res.status(500).json({
+            EM: 'Error from server',
+            EC: -1
+        });
+    }
+};
+
+
+
+export { handleCheckout, handleGetOrdersByUser, handleStripeCheckout, handleStripeWebhook, handleUpdateOrderStatus, handleDeleteOrder, handleGetOrderList };

@@ -25,17 +25,17 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() => isLoader = true);
 
       try {
-        final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+        final authViewModel = context.read<AuthViewModel>();
         final isSuccess = await authViewModel.login(
           _usernameController.text,
           _passwordController.text,
         );
-
+        if (!mounted) return;
         if (isSuccess) {
           Navigator.pushNamedAndRemoveUntil(
             context,
             AppRoutes.main,
-                (route) => false, // Remove all previous routes
+                (route) => false, 
           );
         } else {
           SnackBarUtil.showSnackBar(context, 'Login failed!', AppColors.red);

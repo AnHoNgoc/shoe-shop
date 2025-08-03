@@ -17,7 +17,7 @@ class UserSource implements DataSource {
   @override
   Future<void> changePassword(String oldPassword, String newPassword) async {
     try {
-      final String url = '${AppConstants.changePasswordEndpoint}';
+      final String url = AppConstants.changePasswordEndpoint;
 
       final dio = await DioClient.getDio();
 
@@ -44,7 +44,7 @@ class UserSource implements DataSource {
 
   @override
   Future<bool> updateUser(String username, String profileImage) async {
-    final String url = '${AppConstants.updateUserEndpoint}';
+    final String url = AppConstants.updateUserEndpoint;
 
     final dio = await DioClient.getDio();
 
@@ -74,7 +74,7 @@ class UserSource implements DataSource {
   @override
   Future<String> uploadProfileImage(File imageFile) async {
     try {
-      final String url = '${AppConstants.uploadProfileImageEndpoint}';
+      final String url = AppConstants.uploadProfileImageEndpoint;
 
       final dio = await DioClient.getDio();
 

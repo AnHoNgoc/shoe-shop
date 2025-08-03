@@ -58,7 +58,7 @@ const getUserList = async (page, limit, nameSearch, groupId) => {
 
 const checkUserName = async (userName) => {
     let user = await db.User.findOne({
-        where: { userName: userName }
+        where: { username: userName }
     })
     if (user) {
         return true;

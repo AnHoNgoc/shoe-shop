@@ -1,4 +1,4 @@
-import { getProductList, getAllProducts, createNewProduct, getProductById } from "../service/productService";
+import { getProductList, getAllProducts, createNewProduct, getProductById, deleteProduct } from "../service/productService";
 
 const handleGetProductList = async (req, res) => {
     try {
@@ -78,8 +78,8 @@ const handleCreateProduct = async (req, res) => {
             name: req.body.name,
             price: req.body.price,
             quantity: req.body.quantity,
-            nation: req.body.nation,
-            image: req.file ? req.file.filename : null
+            image: req.body.image,
+            category_id: req.body.categoryId
         };
 
         const data = await createNewProduct(productData);
@@ -142,40 +142,27 @@ const handleGetProductById = async (req, res) => {
     }
 }
 
-// const handleUpdateUser = async (req, res) => {
-//     try {
-//         let data = await updateUser(req.body);
-//         return res.status(200).json({
-//             EM: data.EM,
-//             EC: data.EC,
-//             DT: data.DT
-//         })
-//     } catch (error) {
-//         return res.status(500).json({
-//             EM: "error from server",
-//             EC: "-1",
-//             DT: ""
-//         })
-//     }
-// }
 
-// const handleDeleteUser = async (req, res) => {
-//     try {
-//         let id = req.params.id;
-//         let data = await deleteUser(id)
-//         return res.status(200).json({
-//             EM: data.EM,
-//             EC: data.EC,
-//             DT: data.DT
-//         })
-//     } catch (error) {
-//         return res.status(500).json({
-//             EM: "error from server",
-//             EC: "-1",
-//             DT: ""
-//         })
-//     }
-// }
+
+const handleDeleteProduct = async (req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await deleteProduct(id)
+
+        const statusCode = data.EC === 0 ? 200 : 500;
+
+        return res.status(statusCode).json({
+            EM: data.EM,
+            EC: data.EC,
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            EM: "error from server",
+            EC: "-1",
+        })
+    }
+}
 
 
 
@@ -183,5 +170,6 @@ export {
     handleGetProductList,
     handleGetAllProduct,
     handleCreateProduct,
-    handleGetProductById
+    handleGetProductById,
+    handleDeleteProduct
 };

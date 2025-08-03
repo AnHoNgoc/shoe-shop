@@ -13,7 +13,7 @@ class FavoriteSource implements DataSource {
   @override
   Future<void> toggleFavorite( int productId) async {
     try {
-      final String url = '${AppConstants.toggleFavoriteEndpoint}';
+      final String url = AppConstants.toggleFavoriteEndpoint;
 
       final dio = await DioClient.getDio();
 
@@ -43,7 +43,7 @@ class FavoriteSource implements DataSource {
   @override
   Future<List<FavoriteItem>> getFavorites() async {
     try {
-      final String url = '${AppConstants.getFavoritesEndpoint}';
+      final String url = AppConstants.getFavoritesEndpoint;
 
       final dio = await DioClient.getDio();
       final response = await dio.get(url);

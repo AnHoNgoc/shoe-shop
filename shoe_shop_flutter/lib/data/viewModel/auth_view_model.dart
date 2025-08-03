@@ -15,7 +15,9 @@ class AuthViewModel with ChangeNotifier {
   bool _isLoggedIn = false;
   bool get isLoggedIn => _isLoggedIn;
 
-  UserAccount? userAccount;
+  UserAccount? _userAccount;
+
+  UserAccount? get userAccount => _userAccount;
 
 
   Future<void> checkLogin() async {
@@ -68,22 +70,20 @@ class AuthViewModel with ChangeNotifier {
       await _authRepository.logout();
       _isLoggedIn = false;
       _userId = null;
-      userAccount = null;
+      _userAccount = null;
       notifyListeners();
     } catch (e) {
       print('Error during logout: $e');
     }
   }
 
-  Future<UserAccount?> getAccount() async {
+  Future<void> getAccount() async {
     try {
-      userAccount = await _authRepository.getAccount();
-      print("Da goi lại $userAccount");
+      _userAccount = await _authRepository.getAccount();
+      print('Lấy userAccount thành công: $_userAccount'); // 👈 Thêm dòng này
       notifyListeners();
-      return userAccount;
     } catch (e) {
       print('Error during getAccount: $e');
-      return null;
     }
   }
 }

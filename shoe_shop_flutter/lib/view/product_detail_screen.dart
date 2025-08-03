@@ -37,9 +37,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-      _reviewViewModel = Provider.of<ReviewViewModel>(context, listen: false);
-      _productViewModel = Provider.of<ProductViewModel>(context, listen: false);
+      _authViewModel = context.read<AuthViewModel>();
+      _reviewViewModel = context.read<ReviewViewModel>();
+      _productViewModel = context.read<ProductViewModel>();
       loadProductDetail();
     });
   }
@@ -196,8 +196,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
                           try {
                             await cartVM.addCartItem(product!.id);
+                            if (!context.mounted) return;
                             AppSnackBar.showSuccess(context, 'Product added to cart!');
                           } catch (e) {
+                            if (!context.mounted) return;
                             AppSnackBar.showError(context, e.toString());
                           }
                         },

@@ -16,7 +16,6 @@ class CategoryRepositoryImpl implements CategoryRepository {
   Future<List<Category>> getCategoryList() async {
     try {
       List<Category>? remoteCategories = await _categorySource.getCategories();
-      print("Category repository $remoteCategories");
       return remoteCategories ?? [];
     } catch (e) {
       print('Error occurred while fetching categories: $e');

@@ -26,11 +26,13 @@ class _ChangePasswordState extends State<ChangePasswordScreen> {
       setState(() => isLoader = true);
 
       try {
-        final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+        final userViewModel = context.read<UserViewModel>();
         final isSuccess = await userViewModel.changePassword(
           _oldPasswordController.text,
           _newPasswordController.text,
         );
+
+        if (!mounted) return;
 
         if (isSuccess) {
           Navigator.pushReplacementNamed(context, AppRoutes.main);

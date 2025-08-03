@@ -32,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+      final userViewModel = context.read<UserViewModel>();
       await userViewModel.getUser();
       final user = userViewModel.user;
       if (user != null) {
@@ -50,9 +50,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final updatedUsername = _usernameController.text.trim();
     final updatedImage = _newProfileImagePath ?? _currentUser!.profileImage;
 
-    final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+    final userViewModel = context.read<UserViewModel>();
 
     final success = await userViewModel.updateUser(updatedUsername, updatedImage);
+
+    if (!mounted) return;
 
     if (success) {
       SnackBarUtil.showSnackBar(context, 'Update successful', AppColors.green);
@@ -66,7 +68,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       File imageFile = File(pickedFile.path);
-      final userViewModel = Provider.of<UserViewModel>(context, listen: false);
+      if (!mounted) return;
+      final userViewModel = context.read<UserViewModel>();
       final uploadedUrl = await userViewModel.uploadProfileImage(imageFile);
       if (uploadedUrl != null) {
         if (!mounted) return;
@@ -83,12 +86,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _handleLogout(BuildContext context) async {
     final shouldLogout = await DialogLogout.showLogoutConfirmationDialog(context);
+    if (!context.mounted) return;
+
     if (shouldLogout) {
-      final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-      final favoriteViewModel = Provider.of<FavoriteViewModel>(context, listen: false);
-      final cartViewModel = Provider.of<CartViewModel>(context, listen: false);
+      final authViewModel = context.read<AuthViewModel>();
+      final favoriteViewModel = context.read<FavoriteViewModel>();
+      final cartViewModel = context.read<CartViewModel>();
 
       await authViewModel.logout();
+      if (!context.mounted) return;
+
       favoriteViewModel.clearFavorites();
       cartViewModel.clearCart();
 
@@ -110,7 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return const LoginScreen();
         }
 
-        final userProvider = Provider.of<UserViewModel>(context);
+        final userProvider = context.watch<UserViewModel>();
         final user = userProvider.user;
 
         return Scaffold(
@@ -280,7 +287,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             SizedBox(width: 10.w),
                             Image.network(
-                              "https://static.vecteezy.com/system/resources/previews/034/950/530/non_2x/ai-generated-small-house-with-flowers-on-transparent-background-image-png.png",
+                              "https://khungtranhre.com/wp-content/uploads/2020/08/khung-anh-png-127-1024x630.jpg",
                               height: 140.h,
                               width: 135.w,
                             ),
@@ -306,14 +313,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(height: 15.h),
                     Padding(
-                      padding: EdgeInsets.only(left: 8.w), // sử dụng 8.w thay vì 8.0 để responsive
+                      padding: EdgeInsets.only(left: 8.w),
                       child: GestureDetector(
                         onTap: () => _handleLogout(context),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.logout, color: AppColors.black, size: 28.sp), // OK
-                            SizedBox(width: 18.w), // responsive khoảng cách giữa icon và text
+                            SizedBox(width: 18.w),
                             Text(
                               "Log out",
                               style: TextStyle(

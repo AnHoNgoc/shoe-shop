@@ -1,7 +1,4 @@
-import 'dart:ffi';
-
 import 'package:shoe_shop_flutter/data/model/product_detail_model.dart';
-
 import '../model/product_page_model.dart';
 import '../source/product_source.dart';
 

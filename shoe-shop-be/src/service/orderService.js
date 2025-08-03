@@ -90,61 +90,7 @@ const checkout = async (user, address, phoneNumber) => {
     }
 };
 
-const checkoutFromStripe = async (userId, address, phoneNumber, cartItems) => {
-    const t = await db.sequelize.transaction();
-    try {
-        if (!cartItems || cartItems.length === 0) {
-            return { EM: 'Cart is empty', EC: 1 };
-        }
 
-        // Kiểm tra tồn kho
-        for (const item of cartItems) {
-            const product = await db.Product.findByPk(item.product_id, { transaction: t, lock: t.LOCK.UPDATE });
-            if (!product || item.quantity > product.quantity) {
-                await t.rollback();
-                return { EM: `"${product?.name || 'Product'}" out of stock`, EC: 1 };
-            }
-        }
-
-        // Tính tổng tiền
-        const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-        // Tạo đơn hàng
-        const order = await db.Order.create({
-            user_id: userId,
-            total_amount: total,
-            status: 'paid', // Stripe đã thanh toán
-            address,
-            phone_number: phoneNumber
-        }, { transaction: t });
-
-        // Tạo chi tiết đơn hàng
-        const orderDetails = cartItems.map(item => ({
-            order_id: order.id,
-            product_id: item.product_id,
-            quantity: item.quantity,
-            price: item.price,
-            subtotal: item.price * item.quantity
-        }));
-
-        await db.OrderDetail.bulkCreate(orderDetails, { transaction: t });
-
-        // Trừ tồn kho
-        for (const item of cartItems) {
-            await db.Product.decrement(
-                { quantity: item.quantity },
-                { where: { id: item.product_id }, transaction: t }
-            );
-        }
-
-        await t.commit();
-        return { EM: 'Order created successfully', EC: 0 };
-    } catch (err) {
-        console.error('Stripe Checkout Service Error:', err);
-        await t.rollback();
-        return { EM: 'Server error', EC: -1 };
-    }
-};
 
 const getOrdersByUserId = async (userId) => {
     try {
@@ -191,7 +137,155 @@ const getOrdersByUserId = async (userId) => {
     }
 };
 
+const getOrderList = async ({ page, status, sort }) => {
+    try {
+        const limit = 5;
+        const offset = (page - 1) * limit;
+
+        const whereClause = {};
+        if (status) {
+            whereClause.status = status;
+        }
+
+        const orderClause = [['created_at', sort.toLowerCase() === 'asc' ? 'ASC' : 'DESC']];
+
+        const { count, rows: orders } = await db.Order.findAndCountAll({
+            where: whereClause,
+            limit,
+            offset,
+            order: orderClause,
+            distinct: true,
+            include: [
+                {
+                    model: db.Product,
+                    attributes: ['name', 'price'],
+                    through: { attributes: ['quantity'] }
+                },
+                {
+                    model: db.User,
+                    attributes: ['username']
+                }
+            ]
+        });
+
+        const formattedOrders = orders.map(order => ({
+            id: order.id,
+            status: order.status,
+            address: order.address,
+            phone_number: order.phone_number,
+            total_amount: order.total_amount,
+            created_at: order.createdAt,
+            user: {
+                username: order.User?.username || null
+            },
+            products: order.Products.map(product => ({
+                name: product.name,
+                price: product.price,
+                quantity: product.OrderDetail.quantity
+            }))
+        }));
+
+        return {
+            EM: 'Fetched order list successfully',
+            EC: 0,
+            DT: {
+                totalItems: count,
+                totalPages: Math.ceil(count / limit),
+                currentPage: page,
+                orders: formattedOrders
+            }
+        };
+    } catch (error) {
+        console.error('Error in getOrderList:', error);
+        return {
+            EM: 'Error fetching order list',
+            EC: -1,
+            DT: null
+        };
+    }
+};
+
+
+const updateOrderStatus = async (orderId, status) => {
+    const t = await db.sequelize.transaction();
+    try {
+        const allowedStatuses = ['pending', 'confirmed', 'shipping', 'completed', 'cancelled'];
+
+        if (!allowedStatuses.includes(status)) {
+            return {
+                EM: 'Invalid status value',
+                EC: 1
+            };
+        }
+
+        const order = await db.Order.findByPk(orderId, {
+            include: [{ model: db.OrderDetail }],
+            transaction: t
+        });
+
+        if (!order) {
+            await t.rollback();
+            return {
+                EM: 'Order not found',
+                EC: 1
+            };
+        }
+
+        // Cộng lại tồn kho nếu huỷ đơn hàng
+        if (status === 'cancelled' && order.status !== 'cancelled') {
+            for (const item of order.OrderDetails) {
+                await db.Product.increment(
+                    { quantity: item.quantity },
+                    { where: { id: item.product_id }, transaction: t }
+                );
+            }
+        }
+
+        order.status = status;
+        await order.save({ transaction: t });
+        await t.commit();
+
+        return {
+            EM: 'Order status updated successfully',
+            EC: 0,
+        };
+    } catch (error) {
+        await t.rollback();
+        console.error('Error in updateOrderStatus:', error);
+        return {
+            EM: 'Error updating order',
+            EC: -1,
+        };
+    }
+};
+
+const deleteOrderById = async (orderId) => {
+    try {
+        const order = await db.Order.findByPk(orderId);
+
+        if (!order) {
+            return {
+                EM: 'Order not found',
+                EC: 1
+            };
+        }
+
+        await order.destroy();
+
+        return {
+            EM: 'Order deleted successfully',
+            EC: 0
+        };
+    } catch (error) {
+        console.error('Error in deleteOrderById:', error);
+        return {
+            EM: 'Error deleting order',
+            EC: -1
+        };
+    }
+};
+
 
 export {
-    checkout, getOrdersByUserId, checkoutFromStripe
+    checkout, getOrdersByUserId, updateOrderStatus, deleteOrderById, getOrderList
 };

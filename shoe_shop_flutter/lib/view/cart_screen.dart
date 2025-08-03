@@ -26,9 +26,9 @@ class _CartScreenState extends State<CartScreen> {
       _didFetch = true;
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+        final authViewModel = context.read<AuthViewModel>();
         if (authViewModel.isLoggedIn) {
-          final cartViewModel = Provider.of<CartViewModel>(context, listen: false);
+          final cartViewModel = context.read<CartViewModel>();
           cartViewModel.fetchCart();
         }
       });
@@ -119,7 +119,7 @@ class _CartScreenState extends State<CartScreen> {
                                       ),
                                     ),
                                     Text(
-                                      '${item.categoryName}',
+                                      item.categoryName,
                                       style: TextStyle(fontSize: 14.sp),
                                     ),
                                     Text(

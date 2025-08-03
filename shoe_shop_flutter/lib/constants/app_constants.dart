@@ -21,6 +21,8 @@ class AppConstants {
   static const String addCartItemEndpoint = '/cart/add';
   static const String checkoutEndpoint = '/order/checkout';
   static const String getOrdersEndpoint = '/order/list';
+  static const String getOrdersByUserEndpoint = '/order/user';
   static const String stripeEndpoint = '/order/stripe';
+  static const String updateStatusEndpoint = "/order/update-status";
 }
 

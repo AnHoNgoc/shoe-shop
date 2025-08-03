@@ -1,6 +1,7 @@
 import { getCategoryList } from "../service/categoryService";
 
 const handleGetCategoryList = async (req, res) => {
+
     try {
         const data = await getCategoryList();
 

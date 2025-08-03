@@ -4,14 +4,15 @@ import 'package:provider/provider.dart';
 import '../constants/app_colors.dart';
 import '../data/viewModel/auth_view_model.dart';
 import '../routes/app_routes.dart';
+
 class RequireLoginScreen extends StatelessWidget {
   const RequireLoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthViewModel>(context);
+    final authViewModel = context.read<AuthViewModel>();
 
-    if (!authProvider.isLoggedIn) {
+    if (!authViewModel.isLoggedIn) {
       return Scaffold(
         backgroundColor: AppColors.white,
         body: Center(

@@ -137,6 +137,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       page: newPage,
                       categoryId:  selectedIndex+1,
                       nameSearch: nameSearch,
+                      minPrice: minPrice,
+                      maxPrice: maxPrice,
                     );
                   },
                 ),

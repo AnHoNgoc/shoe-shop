@@ -73,6 +73,7 @@ const handleLogin = async (req, res) => {
 };
 
 const handleLogout = async (req, res) => {
+
     try {
         const { refreshToken } = req.body;
 

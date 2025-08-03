@@ -10,10 +10,10 @@ class ReviewItem extends StatelessWidget {
   final double scaleFactor;
 
   const ReviewItem({
-    Key? key,
+    super.key,
     required this.review,
     this.scaleFactor = 1.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

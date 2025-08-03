@@ -54,28 +54,24 @@ const verifyRefreshToken = async (token) => {
     const key = process.env.REFRESH_TOKEN_SECRET;
 
     try {
-
-        const decoded = jwt.decode(token);
-        if (!decoded || !decoded.id) {
-            throw new Error('Invalid token payload');
-        }
+        // Xác thực token trước
+        const decoded = jwt.verify(token, key); // verify đảm bảo token hợp lệ và không bị giả mạo
 
         const userId = decoded.id;
-
+        if (!userId) {
+            throw new Error('Invalid token payload');
+        }
 
         const tokenInRedis = await redisClient.get(`refreshToken:${userId}`);
         if (!tokenInRedis) {
             throw new Error('Refresh token not found in Redis');
         }
 
-
         if (token !== tokenInRedis) {
             throw new Error('Refresh token mismatch or expired');
         }
 
-        const data = jwt.verify(token, key);
-
-        return data;
+        return decoded; // verified and valid token payload
 
     } catch (error) {
         console.error('Error verifying refresh token:', error.message);
@@ -155,10 +151,11 @@ const checkUserJWT = (req, res, next) => {
 
 const checkUserPermission = (req, res, next) => {
     if (req.user) {
-        let roles = req.user.group.Roles;
+        let permissions = req.user.permissions;
         let currentUrl = req.path;
         let staticUrl = currentUrl.replace(/\/\d+$/, '');
-        if (!roles || roles.length === 0) {
+
+        if (!permissions || permissions.length === 0) {
             return res.status(403).json({
                 EM: "You don't have permission",
                 EC: 1,
@@ -166,18 +163,18 @@ const checkUserPermission = (req, res, next) => {
             });
         }
 
-        let canAccess = roles.some(item =>
-            item.url === staticUrl && item.method === req.method
-        );
+        let canAccess = permissions.includes(staticUrl);
+
+        console.log("Access allowed?", canAccess);
+
         if (canAccess) {
-            next()
+            return next();
         } else {
             return res.status(403).json({
                 EM: "You don't have permission",
                 EC: 1,
                 DT: "",
-
-            })
+            });
         }
 
     } else {
@@ -185,9 +182,50 @@ const checkUserPermission = (req, res, next) => {
             EC: 1,
             DT: "",
             EM: "Not authenticated the user"
-        })
+        });
     }
-}
+};
+
+// const checkUserPermission = (req, res, next) => {
+//     if (!req.user) {
+//         return res.status(401).json({
+//             EC: 1,
+//             DT: "",
+//             EM: "Not authenticated the user"
+//         });
+//     }
+
+//     const roles = req.user.group?.Roles || [];
+//     const currentUrl = req.path;
+//     const method = req.method;
+
+//     if (roles.length === 0) {
+//         return res.status(403).json({
+//             EM: "You don't have permission",
+//             EC: 1,
+//             DT: "",
+//         });
+//     }
+
+//     const canAccess = roles.some(role => {
+//         if (role.method !== method) return false;
+
+//         // Create a matcher function
+//         const matcher = match(role.url, { decode: decodeURIComponent });
+
+//         return matcher(currentUrl); // true if path matches role pattern
+//     });
+
+//     if (canAccess) {
+//         return next();
+//     }
+
+//     return res.status(403).json({
+//         EM: "You don't have permission",
+//         EC: 1,
+//         DT: "",
+//     });
+// };
 
 export {
     createJWT, createRefreshToken, verifyAccessToken, verifyRefreshToken, checkUserJWT, checkUserPermission,

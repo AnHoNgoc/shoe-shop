@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shoe_shop_flutter/view/cart_screen.dart';
 import 'package:shoe_shop_flutter/view/favorite_list_screen.dart';
 import 'package:shoe_shop_flutter/view/home_screen.dart';
@@ -6,6 +7,7 @@ import 'package:shoe_shop_flutter/view/order_screen.dart';
 import 'package:shoe_shop_flutter/view/profile_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_colors.dart';
+import '../data/viewModel/auth_view_model.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -24,6 +26,17 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   int selectedIndex = 0;
+
+  late AuthViewModel _authViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _authViewModel = context.read<AuthViewModel>();
+      _authViewModel.getAccount();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

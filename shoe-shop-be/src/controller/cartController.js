@@ -94,7 +94,6 @@ const handleIncrementCartItem = async (req, res) => {
         });
     }
 
-
     try {
         const data = await incrementCartItem(cartId, productId);
 
@@ -104,7 +103,6 @@ const handleIncrementCartItem = async (req, res) => {
                 EC: data.EC,
             });
         }
-
 
         return res.status(400).json({
             EM: data.EM || "Something went wrong",
@@ -234,14 +232,12 @@ const handleClearCart = async () => {
             EC: data.EC,
         });
 
-
     } catch (error) {
         return res.status(500).json({
             EM: "Error from controller",
             EC: -1,
         });
     }
-
 }
 
 export {

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import "package:http/http.dart" as http;
 import 'package:shoe_shop_flutter/data/model/product_detail_model.dart';
 import '../../constants/app_constants.dart';
@@ -7,6 +6,7 @@ import '../model/product_model.dart';
 import '../model/product_page_model.dart';
 
 abstract class DataSource {
+
   Future<ProductPage?> getProductList(
       int page, {
         int? categoryId,

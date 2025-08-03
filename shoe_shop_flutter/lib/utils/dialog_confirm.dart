@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class DialogDelete extends StatelessWidget {
+class DialogConfirm extends StatelessWidget {
   final String title;
   final String content;
 
-  const DialogDelete({
+  const DialogConfirm({
     super.key,
     this.title = 'Cancel Order?',
     this.content = 'Do you really want to cancel this order?',

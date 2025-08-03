@@ -1,4 +1,5 @@
 import 'package:shoe_shop_flutter/data/model/product_order.dart';
+import 'package:shoe_shop_flutter/data/model/user_model.dart';
 
 class OrderModel {
   final int id;
@@ -7,7 +8,8 @@ class OrderModel {
   final String phoneNumber;
   final double totalAmount;
   final DateTime createdAt;
-  final List<ProductOrder> products; // ✅ mới thêm
+  final List<ProductOrder> products;
+  final User? user;
 
   OrderModel({
     required this.id,
@@ -17,6 +19,7 @@ class OrderModel {
     required this.totalAmount,
     required this.createdAt,
     required this.products,
+    this.user,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -30,6 +33,7 @@ class OrderModel {
       products: (json['products'] as List<dynamic>)
           .map((item) => ProductOrder.fromJson(item))
           .toList(),
+      user: json['user'] != null ? User.fromJson(json['user']) : null, // 👈 parse user
     );
   }
 
@@ -42,6 +46,7 @@ class OrderModel {
       'total_amount': totalAmount.toStringAsFixed(2),
       'created_at': createdAt.toIso8601String(),
       'products': products.map((product) => product.toJson()).toList(),
+      'user': user?.toJson(), // 👈 optional user
     };
   }
 
@@ -49,7 +54,6 @@ class OrderModel {
   String toString() {
     return 'OrderModel(id: $id, status: $status, address: $address, '
         'phoneNumber: $phoneNumber, totalAmount: $totalAmount, '
-        'createdAt: $createdAt, products: $products)';
+        'createdAt: $createdAt, products: $products, user: $user)';
   }
-
 }

@@ -24,4 +24,9 @@ class Group {
       'Roles': roles,
     };
   }
+
+  @override
+  String toString() {
+    return 'Group(id: $id, name: $name, roles: $roles)';
+  }
 }

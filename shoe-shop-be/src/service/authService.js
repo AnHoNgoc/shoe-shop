@@ -66,7 +66,7 @@ const registerNewUser = async (rawUserData) => {
             EM: "Account is created successfully",
             EC: 0
         };
-        
+
     } catch (error) {
         await t.rollback();
         console.error("Error in registerNewUser:", error);
@@ -113,23 +113,23 @@ const loginUser = async (rawData) => {
             };
         }
 
-        // Kiểm tra mật khẩu
         let isCorrectPassword = await checkPassword(rawData.password, user.password);
         if (isCorrectPassword) {
 
             let group = await getGroupWithRoles(user);
 
+            let permissions = group.Roles.map(role => role.url);
 
             let payload = {
                 id: user.id,
-                username: user.username,
-                group: group,
+                groupName: group.name,
+                permissions,
                 cartId: user.Cart?.id || null
-            }
-
+            };
 
             let accessToken = createJWT(payload);
             let refreshToken = await createRefreshToken(payload);
+
             return {
                 EM: "Login successfully",
                 EC: 0,
@@ -138,10 +138,11 @@ const loginUser = async (rawData) => {
                     refresh_token: refreshToken,
                     username: user.username,
                     id: user.id,
-                    group: group,
+                    groupName: group.name,
                     cartId: user.Cart?.id || null
                 }
             };
+
         } else {
             return {
                 EM: "Invalid login information",

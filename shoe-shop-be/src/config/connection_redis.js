@@ -1,28 +1,31 @@
-import { createClient } from 'redis';  // Import redis
+import { createClient } from 'redis';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const client = createClient({
-    url: 'redis://127.0.0.1:6379'
+    url: process.env.REDIS_URL,
+    socket: {
+        tls: true
+    }
 });
 
 client.on('connect', () => {
-    console.log('Redis client connected');
+    console.log('✅ Redis connected successfully');
 });
 
 client.on('error', (err) => {
-    console.log('Redis Client Error', err);
+    console.error('❌ Redis connection error:', err);
 });
 
-async function connectRedis() {
-    await client.connect();
-    client.ping()
-        .then((pong) => {
-            console.log(pong); // Should log 'PONG'
-        })
-        .catch((err) => {
-            console.log('Ping error:', err);
-        });
-}
+const connectRedis = async () => {
+    try {
+        await client.connect();
+    } catch (error) {
+        console.error('❌ Redis connect failed:', error);
+    }
+};
 
 connectRedis();
 
-export default client; 
+export default client;

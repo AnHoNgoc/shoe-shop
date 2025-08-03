@@ -97,7 +97,7 @@ class AuthSource implements DataSource {
     try {
       final String url = '${AppConstants.baseUrl}${AppConstants.logoutEndpoint}';
       final uri = Uri.parse(url);
-      final response = await http.delete(
+      final response = await http.post(
         uri,
         headers: {
           'Content-Type': 'application/json',

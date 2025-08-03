@@ -5,14 +5,12 @@ class UserAccount {
   final String username;
   final Group group;
   final String accessToken;
-  final String profileImage;
 
   UserAccount({
     required this.id,
     required this.username,
     required this.group,
     required this.accessToken,
-    required this.profileImage,
   });
 
   factory UserAccount.fromJson(Map<String, dynamic> map) {
@@ -21,7 +19,6 @@ class UserAccount {
       username: map['username'] ?? '',
       group: Group.fromJson(map['group'] ?? {}),
       accessToken: map['access_token'] ?? '',
-      profileImage: map['profile_image'] ?? ''
     );
   }
 
@@ -29,9 +26,8 @@ class UserAccount {
     return {
       'id': id,
       'username': username,
-      'group': group,
+      'group': group.toJson(),
       'access_token': accessToken,
-      "profileImage": profileImage
     };
   }
 
@@ -41,8 +37,6 @@ class UserAccount {
         'id: $id, '
         'username: $username, '
         'group: $group, '
-        'accessToken: $accessToken, '
-        'profileImage: $profileImage'
         ')';
   }
 }

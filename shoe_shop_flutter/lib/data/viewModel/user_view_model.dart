@@ -11,8 +11,9 @@ class UserViewModel extends ChangeNotifier {
 
   UserViewModel(this._repository);
 
-  User? user;
+  User? _user;
 
+  User? get user => _user;
 
   Future<bool> changePassword(String oldPassword, String newPassword) async {
     try {
@@ -44,14 +45,12 @@ class UserViewModel extends ChangeNotifier {
     }
   }
 
-  Future<User?> getUser() async {
+  Future<void> getUser() async {
     try {
-      user = await _repository.getUser();
+      _user = await _repository.getUser();
       notifyListeners();
-      return user;
     } catch (e) {
       print('Error during getAccount: $e');
-      return null;
     }
   }
 }

@@ -41,7 +41,7 @@ class CartSource implements DataSource {
   @override
   Future<void> incrementCartItem(int productId) async {
     try {
-      final String url = '${AppConstants.incrementCartItemEndpoint}';
+      final String url = AppConstants.incrementCartItemEndpoint;
 
       final dio = await DioClient.getDio();
 
@@ -70,7 +70,7 @@ class CartSource implements DataSource {
   @override
   Future<void> decrementCartItem(int productId) async {
     try {
-      final String url = '${AppConstants.decrementCartItemEndpoint}';
+      final String url = AppConstants.decrementCartItemEndpoint;
 
       final dio = await DioClient.getDio();
 
@@ -99,7 +99,7 @@ class CartSource implements DataSource {
   @override
   Future<void> deleteCartItem(int productId) async {
     try {
-      final String url = '${AppConstants.deleteCartItemEndpoint}';
+      final String url = AppConstants.deleteCartItemEndpoint;
 
       final dio = await DioClient.getDio();
 

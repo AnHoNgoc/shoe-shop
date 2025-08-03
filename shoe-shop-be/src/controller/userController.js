@@ -159,7 +159,6 @@ const getUserAccount = async (req, res) => {
             access_token: req.token,
             group: req.user.group,
             username: req.user.username,
-            profileImage: req.user.profile_image
         }
     })
 }

@@ -3,7 +3,7 @@ import { testAPI, handleRegister, handleLogin, handleLogout, createNewToken } fr
 import { validateAuth } from "../middleware/authValidate";
 import { registerSchema, loginSchema, changePasswordSchema } from "../helpers/validation";
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
-import { handleGetProductList, handleGetAllProduct, handleGetProductById } from "../controller/productController";
+import { handleGetProductList, handleGetAllProduct, handleGetProductById, handleDeleteProduct, handleCreateProduct } from "../controller/productController";
 import { handleGetGroupList } from "../controller/groupController";
 import { handleGetUserList, handleCreateUser, handleUpdateUser, handleDeleteUser, getUserAccount, handleGetUserById, handleChangePassword } from "../controller/userController";
 import { handleGetRoleList, handleCreateRole, handleDeleteRole, handleFetchRolesByGroup, handleAssignRoleToGroup } from "../controller/roleController";
@@ -12,7 +12,7 @@ import { handleGetFavoritesByUser, handleToggleFavorite } from "../controller/fa
 import { handleGetCartItem, handleAddToCart, handleIncrementCartItem, handleDecrementCartItem, handleRemoveFromCart, handleClearCart } from "../controller/cartController";
 import { uploadProfileImage } from "../controller/userController";
 import { handleCreateReview, handleGetReviewList } from "../controller/reviewController";
-import { handleCheckout, handleGetOrders, handleStripeCheckout } from "../controller/orderController";
+import { handleCheckout, handleGetOrdersByUser, handleStripeCheckout, handleUpdateOrderStatus, handleDeleteOrder, handleGetOrderList } from "../controller/orderController";
 import multer from "multer";
 
 
@@ -27,23 +27,23 @@ const upload = multer({
 
 const initAPIRoutes = (app) => {
 
-
     router.get("/test", testAPI);
     router.post("/register", validateAuth(registerSchema), handleRegister);
     router.post("/login", validateAuth(loginSchema), handleLogin);
+    router.post("/refresh-token", createNewToken);
+    router.post("/logout", handleLogout);
+
     router.get("/product/list", handleGetProductList);
     router.get("/product/all", handleGetAllProduct);
     router.get("/product/detail/:id", handleGetProductById);
     router.get("/category/list", handleGetCategoryList);
-    router.post("/refresh-token", createNewToken);
     router.get("/review/list", handleGetReviewList);
 
     router.use(checkUserJWT);
     router.get("/account", getUserAccount);
-    router.delete("/logout", handleLogout);
+    router.use(checkUserPermission);
 
-
-
+    router.get("/group/list", handleGetGroupList);
     router.get("/favorite/list", handleGetFavoritesByUser);
     router.post("/favorite/toggle", handleToggleFavorite);
 
@@ -58,18 +58,23 @@ const initAPIRoutes = (app) => {
 
     router.post("/order/checkout", handleCheckout);
     router.post("/order/stripe", handleStripeCheckout);
-    router.get("/order/list", handleGetOrders);
+    router.get("/order/user", handleGetOrdersByUser);
 
-
-    router.get("/group/list", handleGetGroupList);
-
-    router.get("/user/list", handleGetUserList);
     router.get("/user/detail", handleGetUserById);
     router.patch("/user/change-password", validateAuth(changePasswordSchema), handleChangePassword);
-    router.post("/user/create", handleCreateUser);
+
     router.put("/user/update", handleUpdateUser);
-    router.delete("/user/delete/:id", handleDeleteUser);
     router.post("/upload-profile-image", upload.single("profile_image"), uploadProfileImage);
+
+    router.post("/product/create", handleCreateProduct)
+    router.delete("/product/delete/:id", handleDeleteProduct)
+    router.patch('/order/update-status/:id', handleUpdateOrderStatus);
+    router.delete("/order/delete/:id", handleDeleteOrder);
+    router.get("/order/list", handleGetOrderList)
+
+    router.post("/user/create", handleCreateUser);
+    router.delete("/user/delete/:id", handleDeleteUser);
+    router.get("/user/list", handleGetUserList);
 
     router.get("/role/by-group/:groupId", handleFetchRolesByGroup);
     router.post("/role/assign-to-group", handleAssignRoleToGroup);
