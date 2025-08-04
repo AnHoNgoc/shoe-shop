@@ -42,7 +42,7 @@ const handleLogin = async (req, res) => {
     try {
         const data = await loginUser(req.body);
 
-        if (data?.EC === 0) {
+        if (data.EC === 0) {
             return res.status(200).json({
                 EM: data.EM,
                 EC: 0,
@@ -50,7 +50,7 @@ const handleLogin = async (req, res) => {
             });
         }
 
-        if (data?.EC === -1) {
+        if (data.EC === -1) {
             return res.status(500).json({
                 EM: data.EM || "Server error",
                 EC: -1,

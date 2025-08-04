@@ -124,7 +124,7 @@ const loginUser = async (rawData) => {
                 id: user.id,
                 groupName: group.name,
                 permissions,
-                cartId: user.Cart?.id || null
+                cartId: user.Cart.id || null
             };
 
             let accessToken = createJWT(payload);
@@ -139,7 +139,7 @@ const loginUser = async (rawData) => {
                     username: user.username,
                     id: user.id,
                     groupName: group.name,
-                    cartId: user.Cart?.id || null
+                    cartId: user.Cart.id || null
                 }
             };
 
