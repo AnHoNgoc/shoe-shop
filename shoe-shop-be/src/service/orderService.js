@@ -176,13 +176,18 @@ const getOrderList = async ({ page, status, sort }) => {
             total_amount: order.total_amount,
             created_at: order.createdAt,
             user: {
-                username: order.User?.username || null
+                username: order.User && order.User.username ? order.User.username : null
             },
-            products: order.Products.map(product => ({
-                name: product.name,
-                price: product.price,
-                quantity: product.OrderDetail.quantity
-            }))
+            products: Array.isArray(order.Products)
+                ? order.Products.map(product => ({
+                    name: product.name,
+                    price: product.price,
+                    quantity:
+                        product.OrderDetail && product.OrderDetail.quantity
+                            ? product.OrderDetail.quantity
+                            : 0
+                }))
+                : []
         }));
 
         return {
