@@ -1,6 +1,7 @@
-import { getGroupList } from "../service/groupService";
+import { getGroupList } from "../service/groupService.js";
 
 const handleGetGroupList = async (req, res) => {
+
     try {
 
         const data = await getGroupList();

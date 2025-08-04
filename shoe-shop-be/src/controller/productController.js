@@ -1,4 +1,4 @@
-import { getProductList, getAllProducts, createNewProduct, getProductById, deleteProduct } from "../service/productService";
+import { getProductList, getAllProducts, createNewProduct, getProductById, deleteProduct } from "../service/productService.js";
 
 const handleGetProductList = async (req, res) => {
     try {
@@ -83,7 +83,6 @@ const handleCreateProduct = async (req, res) => {
         };
 
         const data = await createNewProduct(productData);
-
 
         let statusCode = 201;
 

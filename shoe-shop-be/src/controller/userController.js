@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import { getUserList, deleteUser, createNewUser, updateUser, getUserById, changePassword } from "../service/userService";
+import { getUserList, deleteUser, createNewUser, updateUser, getUserById, changePassword } from "../service/userService.js";
 import { v2 as cloudinary } from "cloudinary";
 import streamifier from "streamifier";
 

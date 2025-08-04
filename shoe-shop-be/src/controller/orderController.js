@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import { checkout, getOrdersByUserId, updateOrderStatus, deleteOrderById, getOrderList } from "../service/orderService";
+import { checkout, getOrdersByUserId, updateOrderStatus, deleteOrderById, getOrderList } from "../service/orderService.js";
 import Stripe from 'stripe';
 import db from "../models/index.js";
 

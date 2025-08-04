@@ -1,4 +1,4 @@
-import { getRoleList, createNewRole, deleteRole, fetchRoleByGroup, assignRoleToGroup } from "../service/roleService";
+import { getRoleList, createNewRole, deleteRole, fetchRoleByGroup, assignRoleToGroup } from "../service/roleService.js";
 
 
 

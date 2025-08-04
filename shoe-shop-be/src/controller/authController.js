@@ -1,7 +1,7 @@
-import { registerNewUser, loginUser } from "../service/authService";
-import { verifyRefreshToken } from "../middleware/JWTAction";
+import { registerNewUser, loginUser } from "../service/authService.js";
+import { verifyRefreshToken } from "../middleware/JWTAction.js";
 import jwt from 'jsonwebtoken';
-import redisClient from "../config/connection_redis";
+import redisClient from "../config/connection_redis.js";
 
 
 const testAPI = (req, res) => {

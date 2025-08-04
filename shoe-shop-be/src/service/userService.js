@@ -1,6 +1,6 @@
-import db from "../models/index";
+import db from "../models/index.js";
 import { Op } from 'sequelize';
-import { checkPassword, hashUserPassword } from "../service/authService";
+import { checkPassword, hashUserPassword } from "../service/authService.js";
 
 
 

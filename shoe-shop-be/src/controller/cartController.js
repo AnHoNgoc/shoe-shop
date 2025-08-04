@@ -1,4 +1,4 @@
-import { getCartItems, addToCart, incrementCartItem, decrementCartItem, removeFromCart, clearCart } from "../service/cartService";
+import { getCartItems, addToCart, incrementCartItem, decrementCartItem, removeFromCart, clearCart } from "../service/cartService.js";
 
 const handleGetCartItem = async (req, res) => {
 
@@ -136,7 +136,6 @@ const handleDecrementCartItem = async (req, res) => {
         });
     }
 
-
     try {
         const data = await decrementCartItem(cartId, productId);
 
@@ -146,7 +145,6 @@ const handleDecrementCartItem = async (req, res) => {
                 EC: data.EC,
             });
         }
-
 
         return res.status(400).json({
             EM: data.EM || "Something went wrong",
@@ -182,7 +180,6 @@ const handleRemoveFromCart = async (req, res) => {
 
     try {
         const data = await removeFromCart(cartId, productId);
-
 
         let statusCode = 200;
 

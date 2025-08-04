@@ -1,4 +1,4 @@
-import { toggleFavorite, getFavoritesByUser } from "../service/favoriteService";
+import { toggleFavorite, getFavoritesByUser } from "../service/favoriteService.js";
 
 const handleToggleFavorite = async (req, res) => {
 
@@ -33,6 +33,7 @@ const handleToggleFavorite = async (req, res) => {
 };
 
 const handleGetFavoritesByUser = async (req, res) => {
+
     try {
         const userId = Number(req.user.id);
 

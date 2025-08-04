@@ -1,18 +1,18 @@
 import express from "express";
-import { testAPI, handleRegister, handleLogin, handleLogout, createNewToken } from "../controller/authController";
-import { validateAuth } from "../middleware/authValidate";
-import { registerSchema, loginSchema, changePasswordSchema } from "../helpers/validation";
-import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
-import { handleGetProductList, handleGetAllProduct, handleGetProductById, handleDeleteProduct, handleCreateProduct } from "../controller/productController";
-import { handleGetGroupList } from "../controller/groupController";
-import { handleGetUserList, handleCreateUser, handleUpdateUser, handleDeleteUser, getUserAccount, handleGetUserById, handleChangePassword } from "../controller/userController";
-import { handleGetRoleList, handleCreateRole, handleDeleteRole, handleFetchRolesByGroup, handleAssignRoleToGroup } from "../controller/roleController";
-import { handleGetCategoryList } from "../controller/categoryController";
-import { handleGetFavoritesByUser, handleToggleFavorite } from "../controller/favoriteController";
-import { handleGetCartItem, handleAddToCart, handleIncrementCartItem, handleDecrementCartItem, handleRemoveFromCart, handleClearCart } from "../controller/cartController";
-import { uploadProfileImage } from "../controller/userController";
-import { handleCreateReview, handleGetReviewList } from "../controller/reviewController";
-import { handleCheckout, handleGetOrdersByUser, handleStripeCheckout, handleUpdateOrderStatus, handleDeleteOrder, handleGetOrderList } from "../controller/orderController";
+import { testAPI, handleRegister, handleLogin, handleLogout, createNewToken } from "../controller/authController.js";
+import { validateAuth } from "../middleware/authValidate.js";
+import { registerSchema, loginSchema, changePasswordSchema } from "../helpers/validation.js";
+import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction.js';
+import { handleGetProductList, handleGetAllProduct, handleGetProductById, handleDeleteProduct, handleCreateProduct } from "../controller/productController.js";
+import { handleGetGroupList } from "../controller/groupController.js";
+import { handleGetUserList, handleCreateUser, handleUpdateUser, handleDeleteUser, getUserAccount, handleGetUserById, handleChangePassword } from "../controller/userController.js";
+import { handleGetRoleList, handleCreateRole, handleDeleteRole, handleFetchRolesByGroup, handleAssignRoleToGroup } from "../controller/roleController.js";
+import { handleGetCategoryList } from "../controller/categoryController.js";
+import { handleGetFavoritesByUser, handleToggleFavorite } from "../controller/favoriteController.js";
+import { handleGetCartItem, handleAddToCart, handleIncrementCartItem, handleDecrementCartItem, handleRemoveFromCart, handleClearCart } from "../controller/cartController.js";
+import { uploadProfileImage } from "../controller/userController.js";
+import { handleCreateReview, handleGetReviewList } from "../controller/reviewController.js";
+import { handleCheckout, handleGetOrdersByUser, handleStripeCheckout, handleUpdateOrderStatus, handleDeleteOrder, handleGetOrderList } from "../controller/orderController.js";
 import multer from "multer";
 
 

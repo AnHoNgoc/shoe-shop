@@ -1,5 +1,5 @@
 
-import db from "../models/index"
+import db from "../models/index.js"
 import { Op } from 'sequelize';
 
 const getProductList = async (page, limit, nameSearch, minPrice, maxPrice, idCategory) => {

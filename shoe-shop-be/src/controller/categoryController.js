@@ -1,4 +1,4 @@
-import { getCategoryList } from "../service/categoryService";
+import { getCategoryList } from "../service/categoryService.js";
 
 const handleGetCategoryList = async (req, res) => {
 

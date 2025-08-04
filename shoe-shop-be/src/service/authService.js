@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import db from "../models/index";
+import db from "../models/index.js"
 import bcrypt from "bcrypt";
-import { createJWT, createRefreshToken } from "../middleware/JWTAction";
+import { createJWT, createRefreshToken } from "../middleware/JWTAction.js";
 
 const hashUserPassword = async (userPassword) => {
     try {
