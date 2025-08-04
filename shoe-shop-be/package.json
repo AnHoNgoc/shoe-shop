@@ -4,7 +4,7 @@
   "description": "sale shoe",
   "main": "dist/server.js",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "npm run build && node dist/server.js",
     "dev": "nodemon --exec babel-node src/server.js",
     "build": "npx babel src --out-dir dist --config-file ./babel.config.json"
   },
