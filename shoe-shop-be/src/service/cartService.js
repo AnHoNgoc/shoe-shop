@@ -23,7 +23,7 @@ const getCartItems = async (cartId) => {
             price: parseFloat(item.Product.price),
             name: item.Product.name,
             image: item.Product.image,
-            categoryName: item.Product.Category?.name || null
+            categoryName: item.Product.Category && item.Product.Category.name || null
         }));
 
         const totalAmount = cartItems.reduce(
