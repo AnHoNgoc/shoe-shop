@@ -1,5 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config();
+require('dotenv').config();
 import express from "express";
 import connection from "./config/connectionDB.js";
 import initAPIbRoutes from "./routes/api.js";
