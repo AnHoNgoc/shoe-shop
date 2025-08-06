@@ -83,7 +83,7 @@ const initAPIRoutes = (app) => {
     router.post("/role/create", handleCreateRole);
     router.delete("/role/delete/:id", handleDeleteRole);
 
-    return app.use("/api", router);
+    return app.use("/shoe-shop", router);
 
 }
 

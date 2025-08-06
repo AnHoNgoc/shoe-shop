@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/server.js",
     "dev": "nodemon --exec babel-node src/server.js",
-    "build": "npx babel src --out-dir dist --config-file ./babel.config.json && copyfiles -u 1 src/config/**/* dist/config"
+    "build": "npx babel src --out-dir dist --config-file ./babel.config.json && cp -r src/config dist/"
   },
   "author": "Ho Ngoc An",
   "license": "ISC",
@@ -36,7 +36,6 @@
   },
   "devDependencies": {
     "@babel/node": "^7.28.0",
-    "copyfiles": "^2.4.1",
     "nodemon": "^3.1.9"
   }
 }
