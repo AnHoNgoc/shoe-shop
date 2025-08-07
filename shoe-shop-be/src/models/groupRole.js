@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'GroupRole',
-        tableName: 'Group_Role',
+        tableName: 'group_role',
         underscored: true,
         timestamps: true
     });

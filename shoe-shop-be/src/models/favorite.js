@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Favorite',
+    tableName: 'favorite',
     underscored: true,
     timestamps: true
   });
