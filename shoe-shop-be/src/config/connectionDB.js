@@ -28,3 +28,6 @@ const connection = async () => {
 };
 
 export default connection;
+
+// ✅ THÊM DÒNG NÀY ĐỂ models/index.js IMPORT ĐƯỢC
+export { sequelize };
