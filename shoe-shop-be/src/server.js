@@ -8,7 +8,7 @@ import helmet from 'helmet';
 import { handleStripeWebhook } from './controller/orderController.js';
 const app = express();
 
-// app.post('/shoe-shop/order/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook);
+app.post('/shoe-shop/order/webhook', express.raw({ type: 'application/json' }), handleStripeWebhook);
 
 app.use(helmet());
 app.use(bodyParser.json());
