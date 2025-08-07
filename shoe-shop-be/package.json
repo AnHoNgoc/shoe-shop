@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "sale shoe",
   "main": "dist/server.js",
-  "scripts": {
-    "start": "node dist/server.js",
-    "dev": "nodemon --exec babel-node src/server.js",
-    "build": "npx babel src --out-dir dist --config-file ./babel.config.json && cp -r src/config dist/"
-  },
   "author": "Ho Ngoc An",
   "license": "ISC",
   "dependencies": {
