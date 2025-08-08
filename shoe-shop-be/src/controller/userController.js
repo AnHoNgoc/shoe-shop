@@ -149,16 +149,15 @@ const handleDeleteUser = async (req, res) => {
 };
 
 const getUserAccount = async (req, res) => {
-    console.log(req.user);
+    console.log("🔍 req.user:", req.user);
 
     return res.status(200).json({
         EM: "get user account successfully",
         EC: 0,
         DT: {
             id: req.user.id,
-            access_token: req.token,
-            group: req.user.group,
-            username: req.user.username,
+            group: req.user.groupName,
+            username: req.user.username
         }
     })
 }

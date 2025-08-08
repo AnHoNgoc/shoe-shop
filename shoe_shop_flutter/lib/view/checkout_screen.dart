@@ -19,13 +19,13 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   void dispose() {
-    addressController.dispose();
-    phoneController.dispose();
+    _addressController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -54,7 +54,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
             // Address Field
             TextFormField(
-              controller: addressController,
+              controller: _addressController,
               decoration: InputDecoration(
                 labelText: 'Shipping Address',
                 labelStyle: TextStyle(fontSize: 14.sp),
@@ -62,7 +62,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ),
             // Phone Field
             TextFormField(
-              controller: phoneController,
+              controller: _phoneController,
               decoration: InputDecoration(
                 labelText: 'Phone Number',
                 labelStyle: TextStyle(fontSize: 14.sp),
@@ -113,8 +113,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ? null
                             : () async {
                           final error = AppValidator.validateAddressAndPhone(
-                            addressController.text,
-                            phoneController.text,
+                            _addressController.text,
+                            _phoneController.text,
                           );
 
                           if (error != null) {
@@ -127,8 +127,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                           try {
                             await orderVM.checkout(
-                              addressController.text,
-                              phoneController.text,
+                              _addressController.text,
+                              _phoneController.text,
                             );
 
                             AppToast.showSuccess('✅ Order placed successfully!');
@@ -179,8 +179,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ? null
                             : () async {
                           final error = AppValidator.validateAddressAndPhone(
-                            addressController.text,
-                            phoneController.text,
+                            _addressController.text,
+                            _phoneController.text,
                           );
 
                           if (error != null) {
@@ -193,8 +193,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                           try {
                             await orderVM.stripeCheckout(
-                              addressController.text,
-                              phoneController.text,
+                              _addressController.text,
+                              _phoneController.text,
                             );
                           } catch (e) {
                             AppToast.showError(e.toString());

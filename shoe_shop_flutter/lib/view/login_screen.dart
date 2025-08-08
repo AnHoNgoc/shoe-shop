@@ -7,6 +7,8 @@ import '../routes/app_routes.dart';
 import '../utils/snack_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../utils/validator.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -106,8 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     keyboardType: TextInputType.name,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: _buildInputDecoration("Username", Icons.verified_user),
-                    validator: (value) =>
-                    value == null || value.trim().isEmpty ? "Username is required" : null,
+                    validator: AppValidator.validateUser
                   ),
                   SizedBox(height: 16.h),
 
@@ -117,10 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(color: AppColors.black87, fontSize: 16.sp),
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: _buildInputDecoration("Password", Icons.password),
-                    validator: (value) =>
-                    value == null || value.length < 6
-                        ? "Password must be at least 6 characters"
-                        : null,
+                    validator: AppValidator.validatePassword
                   ),
                 ],
               ),

@@ -1,5 +1,5 @@
 class AppConstants {
-  static const String baseUrl = 'http://192.168.1.3:8080/api';
+  static const String baseUrl = 'https://shoe-shop-58sw.onrender.com/shoe-shop';
   static const String categoryListEndpoint = '/category/list';
   static const String productListEndpoint = '/product/list';
   static const String productDetailEndpoint = '/product/detail/';

@@ -39,7 +39,7 @@ class _OrderScreenState extends State<OrderScreen> {
           );
         }
 
-        final groupName = userAccount.group.name;
+        final groupName = userAccount.group;
 
         if (groupName == 'customer') {
           return const OrderScreenCustomer();

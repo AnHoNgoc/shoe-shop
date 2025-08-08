@@ -80,7 +80,7 @@ class AuthViewModel with ChangeNotifier {
   Future<void> getAccount() async {
     try {
       _userAccount = await _authRepository.getAccount();
-      print('Lấy userAccount thành công: $_userAccount'); // 👈 Thêm dòng này
+      print('Lấy userAccount thành công: $_userAccount'); 
       notifyListeners();
     } catch (e) {
       print('Error during getAccount: $e');

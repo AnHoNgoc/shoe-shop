@@ -66,7 +66,7 @@ class HorizontalTimeline extends StatelessWidget {
                 return GestureDetector(
                   onTap: () async {
                     final userAccount = context.read<AuthViewModel>().userAccount;
-                    final groupName = userAccount?.group.name;
+                    final groupName = userAccount?.group;
 
                     if (groupName == 'customer') return;
 

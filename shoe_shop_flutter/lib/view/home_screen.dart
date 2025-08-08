@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context, viewModel, _) {
                     final categories = viewModel.categories;
 
-                    if (categories == null || categories.isEmpty) {
+                    if (categories.isEmpty) {
                       return Center(child: CircularProgressIndicator());
                     }
 

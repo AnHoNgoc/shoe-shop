@@ -113,6 +113,9 @@ const checkUserJWT = (req, res, next) => {
         // 4. Verify token
         const decoded = verifyAccessToken(token);
 
+        // ✅ Log ra để kiểm tra payload
+        console.log("🧠 Decoded JWT payload:", decoded);
+
         // 5. Gắn thông tin user vào request
         if (decoded) {
             req.user = decoded;
@@ -185,47 +188,6 @@ const checkUserPermission = (req, res, next) => {
         });
     }
 };
-
-// const checkUserPermission = (req, res, next) => {
-//     if (!req.user) {
-//         return res.status(401).json({
-//             EC: 1,
-//             DT: "",
-//             EM: "Not authenticated the user"
-//         });
-//     }
-
-//     const roles = req.user.group?.Roles || [];
-//     const currentUrl = req.path;
-//     const method = req.method;
-
-//     if (roles.length === 0) {
-//         return res.status(403).json({
-//             EM: "You don't have permission",
-//             EC: 1,
-//             DT: "",
-//         });
-//     }
-
-//     const canAccess = roles.some(role => {
-//         if (role.method !== method) return false;
-
-//         // Create a matcher function
-//         const matcher = match(role.url, { decode: decodeURIComponent });
-
-//         return matcher(currentUrl); // true if path matches role pattern
-//     });
-
-//     if (canAccess) {
-//         return next();
-//     }
-
-//     return res.status(403).json({
-//         EM: "You don't have permission",
-//         EC: 1,
-//         DT: "",
-//     });
-// };
 
 export {
     createJWT, createRefreshToken, verifyAccessToken, verifyRefreshToken, checkUserJWT, checkUserPermission,

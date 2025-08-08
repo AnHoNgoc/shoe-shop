@@ -122,10 +122,13 @@ const loginUser = async (rawData) => {
 
             let payload = {
                 id: user.id,
+                username: user.username,
                 groupName: group.name,
                 permissions,
                 cartId: user.Cart && user.Cart.id || null
             };
+
+            console.log("✅ Payload gửi vào JWT:", payload);
 
             let accessToken = createJWT(payload);
             let refreshToken = await createRefreshToken(payload);

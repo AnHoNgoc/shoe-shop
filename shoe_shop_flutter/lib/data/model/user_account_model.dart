@@ -3,40 +3,36 @@ import 'package:shoe_shop_flutter/data/model/group_model.dart';
 class UserAccount {
   final int id;
   final String username;
-  final Group group;
-  final String accessToken;
+  final String group;
 
   UserAccount({
     required this.id,
     required this.username,
     required this.group,
-    required this.accessToken,
   });
 
   factory UserAccount.fromJson(Map<String, dynamic> map) {
+    final data = map['DT'] ?? {}; // Lấy data trong key DT
+
     return UserAccount(
-      id: map['id'] ?? 0,
-      username: map['username'] ?? '',
-      group: Group.fromJson(map['group'] ?? {}),
-      accessToken: map['access_token'] ?? '',
+      id: data['id'] ?? 0,
+      username: data['username'] ?? '',
+      group: data['group'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'username': username,
-      'group': group.toJson(),
-      'access_token': accessToken,
+      'DT': {
+        'id': id,
+        'username': username,
+        'group': group,
+      },
     };
   }
 
   @override
   String toString() {
-    return 'UserAccount('
-        'id: $id, '
-        'username: $username, '
-        'group: $group, '
-        ')';
+    return 'UserAccount(id: $id, username: $username, group: $group)';
   }
 }
