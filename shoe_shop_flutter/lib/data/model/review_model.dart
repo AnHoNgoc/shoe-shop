@@ -4,7 +4,7 @@ class Review {
   final int rating;
   final String? comment;
   final DateTime? createdAt;
-  final User? user; // ✅ dùng User đã có sẵn
+  final User? user;
 
   Review({
     required this.rating,

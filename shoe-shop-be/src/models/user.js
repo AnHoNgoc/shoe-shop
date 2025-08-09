@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             User.hasOne(models.Cart, { foreignKey: 'user_id' });
             User.hasMany(models.Favorite, { foreignKey: 'user_id' })
             User.hasMany(models.Review, { foreignKey: 'user_id' })
+            User.hasMany(models.SocialAccount, { foreignKey: 'user_id' });
         }
     }
     User.init({

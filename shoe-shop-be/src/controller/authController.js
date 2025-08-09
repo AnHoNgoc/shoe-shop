@@ -1,4 +1,4 @@
-import { registerNewUser, loginUser } from "../service/authService.js";
+import { registerNewUser, loginUser, googleLoginService } from "../service/authService.js";
 import { verifyRefreshToken } from "../middleware/JWTAction.js";
 import jwt from 'jsonwebtoken';
 import redisClient from "../config/connection_redis.js";
@@ -161,7 +161,46 @@ const createNewToken = async (req, res) => {
     }
 };
 
+const handleGoogleLogin = async (req, res) => {
+    try {
+        const { idToken } = req.body;
+
+        if (!idToken) {
+            return res.status(400).json({
+                EM: "Missing Google ID token",
+                EC: 1,
+                DT: {}
+            });
+        }
+
+        const data = await googleLoginService(idToken);
+
+        if (data.EC === 0) {
+            return res.status(200).json({
+                EM: data.EM,
+                EC: 0,
+                DT: data.DT
+            });
+        }
+
+        return res.status(401).json({
+            EM: data.EM || "Google login failed",
+            EC: 1,
+            DT: {}
+        });
+
+    } catch (e) {
+        console.error("Google Login error:", e);
+        return res.status(500).json({
+            EM: "Server error",
+            EC: -1,
+            DT: {}
+        });
+    }
+};
+
+
 
 export {
-    testAPI, handleRegister, handleLogin, handleLogout, createNewToken
+    testAPI, handleRegister, handleLogin, handleLogout, createNewToken, handleGoogleLogin
 };

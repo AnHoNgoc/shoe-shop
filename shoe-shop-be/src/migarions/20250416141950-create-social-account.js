@@ -1,52 +1,50 @@
 'use strict';
+
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('Cart_Item', {
+        await queryInterface.createTable('Social_Account', {
             id: {
+                type: Sequelize.INTEGER,
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
-                type: Sequelize.INTEGER
             },
-            cart_id: {
+            user_id: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'cart', // Tên bảng
-                    key: 'id'
+                    model: 'user', // tên table của model User
+                    key: 'id',
                 },
                 onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
+                onDelete: 'CASCADE',
             },
-            product_id: {
-                type: Sequelize.INTEGER,
+            provider: {
+                type: Sequelize.STRING(50),
                 allowNull: false,
-                references: {
-                    model: 'product',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
             },
-            quantity: {
-                type: Sequelize.INTEGER,
+            provider_user_id: {
+                type: Sequelize.STRING(255),
                 allowNull: false,
-                defaultValue: 1
+            },
+            email: {
+                type: Sequelize.STRING(255),
+                allowNull: true,
             },
             created_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
-                defaultValue: Sequelize.fn('NOW')
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
             },
             updated_at: {
                 allowNull: false,
                 type: Sequelize.DATE,
-                defaultValue: Sequelize.fn('NOW')
-            }
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+            },
         });
     },
 
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('Cart_Item');
-    }
+        await queryInterface.dropTable('Social_Account');
+    },
 };

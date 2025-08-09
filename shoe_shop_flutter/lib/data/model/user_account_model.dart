@@ -1,5 +1,3 @@
-import 'package:shoe_shop_flutter/data/model/group_model.dart';
-
 class UserAccount {
   final int id;
   final String username;
@@ -12,12 +10,10 @@ class UserAccount {
   });
 
   factory UserAccount.fromJson(Map<String, dynamic> map) {
-    final data = map['DT'] ?? {}; // Lấy data trong key DT
-
     return UserAccount(
-      id: data['id'] ?? 0,
-      username: data['username'] ?? '',
-      group: data['group'] ?? '',
+      id: map['id'] ?? 0,
+      username: map['username'] ?? '',
+      group: map['group'] ?? '',
     );
   }
 

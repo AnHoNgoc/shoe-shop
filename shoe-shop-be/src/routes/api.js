@@ -1,5 +1,5 @@
 import express from "express";
-import { testAPI, handleRegister, handleLogin, handleLogout, createNewToken } from "../controller/authController.js";
+import { testAPI, handleRegister, handleLogin, handleLogout, createNewToken, handleGoogleLogin } from "../controller/authController.js";
 import { validateAuth } from "../middleware/authValidate.js";
 import { registerSchema, loginSchema, changePasswordSchema } from "../helpers/validation.js";
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction.js';
@@ -32,6 +32,7 @@ const initAPIRoutes = (app) => {
     router.post("/login", validateAuth(loginSchema), handleLogin);
     router.post("/refresh-token", createNewToken);
     router.post("/logout", handleLogout);
+    router.post("/login/google", handleGoogleLogin);
 
     router.get("/product/list", handleGetProductList);
     router.get("/product/all", handleGetAllProduct);

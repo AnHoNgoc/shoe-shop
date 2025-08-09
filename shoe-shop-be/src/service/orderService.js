@@ -26,7 +26,6 @@ const checkout = async (user, address, phoneNumber) => {
             }
         }
 
-        // Kiểm tra tồn kho
         for (const item of cartItems) {
             if (item.quantity > item.Product.quantity) {
                 return {
@@ -36,13 +35,11 @@ const checkout = async (user, address, phoneNumber) => {
             }
         }
 
-        // Tính tổng tiền
         const total = cartItems.reduce((sum, item) => {
             return sum + item.Product.price * item.quantity;
         }, 0);
 
 
-        // Tạo đơn hàng
         const order = await db.Order.create({
             user_id: userId,
             total_amount: total,
@@ -51,7 +48,7 @@ const checkout = async (user, address, phoneNumber) => {
             phone_number: phoneNumber
         }, { transaction: t });
 
-        // Tạo chi tiết đơn hàng
+
         const orderDetails = cartItems.map(item => ({
             order_id: order.id,
             product_id: item.product_id,
@@ -70,7 +67,6 @@ const checkout = async (user, address, phoneNumber) => {
             );
         }
 
-        // Xóa giỏ hàng
         await db.CartItem.destroy({ where: { cart_id: cartId }, transaction: t });
 
         await t.commit();
@@ -212,6 +208,7 @@ const getOrderList = async ({ page, status, sort }) => {
 
 
 const updateOrderStatus = async (orderId, status) => {
+
     const t = await db.sequelize.transaction();
     try {
         const allowedStatuses = ['pending', 'confirmed', 'shipping', 'completed', 'cancelled'];

@@ -3,7 +3,7 @@ import '../../constants/app_constants.dart';
 import '../model/category_model.dart';
 import "package:http/http.dart" as http;
 
-abstract  class DataSource {
+abstract class DataSource {
   Future<List<Category>?> getCategories();
 }
 
