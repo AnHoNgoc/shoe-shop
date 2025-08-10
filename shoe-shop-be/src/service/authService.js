@@ -163,7 +163,7 @@ const loginUser = async (rawData) => {
 };
 
 
-const CLIENT_ID = process.env.GOOGLE_WEB_CLIENT_ID;
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(CLIENT_ID);
 
 

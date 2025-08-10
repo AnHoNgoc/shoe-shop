@@ -57,7 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final GoogleSignIn googleSignIn = GoogleSignIn(
     scopes: ['email'],
-    serverClientId: "421941018527-130sacf9uiknvln84uclaodnl83pf2jl.apps.googleusercontent.com", // Web OAuth Client ID
   );
 
   Future<void> _handleGoogleLogin() async {
