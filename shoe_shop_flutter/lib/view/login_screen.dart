@@ -56,7 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   final GoogleSignIn googleSignIn = GoogleSignIn(
-    scopes: ['email'],
+    scopes: ['email', 'openid'],
+    serverClientId: '421941018527-130sacf9uiknvln84uclaodnl83pf2jl.apps.googleusercontent.com',
   );
 
   Future<void> _handleGoogleLogin() async {
@@ -71,6 +72,8 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       final GoogleSignInAuthentication googleAuth = await account.authentication;
+      print('Access Token: ${googleAuth.accessToken}');
+      print('ID Token: ${googleAuth.idToken}');
       final String? idToken = googleAuth.idToken;
 
       if (idToken == null) {
@@ -89,6 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
         SnackBarUtil.showSnackBar(context, 'Google login failed', Colors.red);
       }
     } catch (e) {
+      print("Error google $e");
       SnackBarUtil.showSnackBar(context, 'Error during Google login: $e', Colors.red);
     } finally {
       if (mounted) {
@@ -118,12 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (Navigator.canPop(context)) {
                   Navigator.pop(context);
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("No screen to back"),
-                      backgroundColor: AppColors.red,
-                    ),
-                  );
+                  SnackBarUtil.showSnackBar(context, 'No screen to back ', Colors.red);
                 }
               },
               icon: Icon(Icons.arrow_back, color: AppColors.black54, size: 24.sp),
