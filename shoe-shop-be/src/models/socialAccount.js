@@ -29,9 +29,10 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: 'SocialAccount',
-        tableName: 'social_accounts',
+        tableName: 'social_account',
+        freezeTableName: true,
         underscored: true,
-        timestamps: true
+        timestamps: false
     });
 
     return SocialAccount;

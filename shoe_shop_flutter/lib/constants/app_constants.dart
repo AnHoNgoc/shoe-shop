@@ -4,7 +4,7 @@ class AppConstants {
   static const String productListEndpoint = '/product/list';
   static const String productDetailEndpoint = '/product/detail/';
   static const String loginEndpoint = '/login';
-  static const String googleLoginEndpoint = '/google-login';
+  static const String googleLoginEndpoint = '/login/google';
   static const String registerEndpoint = '/register';
   static const String accountEndpoint = '/account';
   static const String logoutEndpoint = '/logout';

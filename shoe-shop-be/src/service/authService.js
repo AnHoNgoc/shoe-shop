@@ -183,6 +183,8 @@ const googleLoginService = async (idToken) => {
 
         // 1. Xác thực token với Google
         const googleData = await verifyGoogleToken(idToken);
+
+
         const googleId = googleData.sub;
         const email = googleData.email;
         const name = googleData.name;
@@ -193,6 +195,7 @@ const googleLoginService = async (idToken) => {
             where: { provider: 'google', provider_user_id: googleId },
             include: db.User
         });
+
 
         let user;
         if (socialAccount) {
@@ -210,6 +213,7 @@ const googleLoginService = async (idToken) => {
                 group_id: 3
             }, { transaction: t });
 
+
             const cart = await db.Cart.create({
                 user_id: user.id
             }, { transaction: t });
@@ -226,8 +230,9 @@ const googleLoginService = async (idToken) => {
             await t.commit();
         }
 
-        // 4. Lấy group + permissions
         const group = await getGroupWithRoles(user);
+
+
         const permissions = group.Roles.map(role => role.url);
 
         // 5. Payload thống nhất
@@ -242,6 +247,7 @@ const googleLoginService = async (idToken) => {
         // 6. Tạo token (refresh token tự lưu vào Redis)
         const accessToken = createJWT(payload);
         const refreshToken = await createRefreshToken(payload);
+
 
         return {
             EM: "Google login successful",
