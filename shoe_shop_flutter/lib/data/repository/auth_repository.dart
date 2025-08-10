@@ -7,6 +7,7 @@ import '../source/auth_source.dart';
 
 abstract class AuthRepository {
   Future<LoginResponse?> login(String username, String password);
+  Future<LoginResponse?> googleLogin(String idToken);
   Future<bool> register(String username, String password);
   Future<void> logout();
   Future<String?> getAccessToken();
@@ -24,6 +25,22 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<LoginResponse?> login(String username, String password) async {
     final loginResponse = await _authDataSource.login(username, password);
+    if (loginResponse != null) {
+      await _secureStorage.write(
+          key: 'access_token', value: loginResponse.accessToken);
+      await _secureStorage.write(
+          key: 'refresh_token', value: loginResponse.refreshToken);
+      await _secureStorage.write(
+          key: 'user_name', value: loginResponse.username);
+      await _secureStorage.write(
+          key: 'user_id', value: loginResponse.id.toString());
+    }
+    return loginResponse;
+  }
+
+  @override
+  Future<LoginResponse?> googleLogin(String idToken) async {
+    final loginResponse = await _authDataSource.googleLogin(idToken);
     if (loginResponse != null) {
       await _secureStorage.write(
           key: 'access_token', value: loginResponse.accessToken);

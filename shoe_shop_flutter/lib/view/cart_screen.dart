@@ -202,7 +202,7 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                   Center(
                     child: SizedBox(
-                      width: 200, // Chiều rộng cố định, bạn có thể chỉnh tùy ý
+                      width: 200.w, // Chiều rộng cố định, bạn có thể chỉnh tùy ý
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.pushNamed(context, AppRoutes.checkout);
@@ -211,7 +211,7 @@ class _CartScreenState extends State<CartScreen> {
                           backgroundColor: AppColors.deepPurpleAccent,
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(30.r),
                           ),
                           elevation: 4,
                         ),

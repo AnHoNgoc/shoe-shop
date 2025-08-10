@@ -8,6 +8,7 @@ import '../model/user_account_model.dart';
 
 abstract interface class DataSource {
   Future<LoginResponse?> login(String username, String password);
+  Future<LoginResponse?> googleLogin(String idToken);
   Future<bool> register(String username, String password);
   Future<UserAccount?> getAccount();
   Future<void> logout(String refreshToken);
@@ -145,6 +146,44 @@ class AuthSource implements DataSource {
       }
     } catch (e) {
       print('Error getting account: $e');
+      return null;
+    }
+  }
+
+  @override
+  Future<LoginResponse?> googleLogin(String idToken) async {
+    try {
+      final String url = '${AppConstants.baseUrl}${AppConstants.googleLoginEndpoint}'; // endpoint Google login
+      final uri = Uri.parse(url);
+      final rs = await http.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'idToken': idToken,
+        }),
+      );
+
+      if (rs.statusCode == 200) {
+        final bodyContent = utf8.decode(rs.bodyBytes);
+        final Map<String, dynamic> data = jsonDecode(bodyContent);
+
+        if (data['EC'] == 0) {
+          print("Google Login Successful");
+          final userMap = data['DT'] as Map<String, dynamic>;
+          final loginResponse = LoginResponse.fromJson(userMap);
+          return loginResponse;
+        } else {
+          print("Google Login failed: ${data['EM']}");
+          return null;
+        }
+      } else {
+        print('HTTP Error: ${rs.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error during Google login: $e');
       return null;
     }
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import '../constants/app_colors.dart';
@@ -20,7 +21,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  var isLoader = false;
+
+  bool isLoader = false;
+
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -48,6 +51,49 @@ class _LoginScreenState extends State<LoginScreen> {
         if (mounted) {
           setState(() => isLoader = false);
         }
+      }
+    }
+  }
+
+  final GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: ['email'],
+    serverClientId: "421941018527-130sacf9uiknvln84uclaodnl83pf2jl.apps.googleusercontent.com", // Web OAuth Client ID
+  );
+
+  Future<void> _handleGoogleLogin() async {
+    setState(() => isLoader = true);
+
+    try {
+      final GoogleSignInAccount? account = await googleSignIn.signIn();
+
+      if (account == null) {
+        SnackBarUtil.showSnackBar(context, 'Google Sign-In cancelled', Colors.orange);
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await account.authentication;
+      final String? idToken = googleAuth.idToken;
+
+      if (idToken == null) {
+        SnackBarUtil.showSnackBar(context, 'Failed to get Google ID token', Colors.red);
+        return;
+      }
+
+      final authViewModel = context.read<AuthViewModel>();
+      final bool isSuccess = await authViewModel.googleLogin(idToken);
+
+      if (!mounted) return;
+
+      if (isSuccess) {
+        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.main, (route) => false);
+      } else {
+        SnackBarUtil.showSnackBar(context, 'Google login failed', Colors.red);
+      }
+    } catch (e) {
+      SnackBarUtil.showSnackBar(context, 'Error during Google login: $e', Colors.red);
+    } finally {
+      if (mounted) {
+        setState(() => isLoader = false);
       }
     }
   }
@@ -151,7 +197,39 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-            SizedBox(height: 20.h),
+            SizedBox(height: 10.h),
+
+            Center(
+              child: Text(
+                "Or",
+                style: TextStyle(
+                  color: AppColors.blue,  // màu xanh theo AppColors bạn đang dùng
+                  fontSize: 18.sp,
+                ),
+              ),
+            ),
+
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+              ),
+              onPressed: isLoader ? null : _handleGoogleLogin,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Continue with",
+                    style: TextStyle(color: AppColors.blue, fontSize: 20.sp),
+                  ),
+                  SizedBox(width: 8.w),
+                  Image.asset('asset/images/google_logo.png', height: 35.h),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 15.h),
 
             Center(
               child: TextButton(

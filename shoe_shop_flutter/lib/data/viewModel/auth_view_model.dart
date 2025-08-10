@@ -39,7 +39,6 @@ class AuthViewModel with ChangeNotifier {
       final loginResponse = await _authRepository.login(username, password);
       if (loginResponse != null) {
         _isLoggedIn = true;
-
         _userId = await _authRepository.getUserId();
         notifyListeners();
         return true;
@@ -48,6 +47,22 @@ class AuthViewModel with ChangeNotifier {
     } catch (e) {
       print('Error during login: $e');
 
+      return false;
+    }
+  }
+
+  Future<bool> googleLogin(String idToken) async {
+    try {
+      final loginResponse = await _authRepository.googleLogin(idToken);
+      if (loginResponse != null) {
+        _isLoggedIn = true;
+        _userId = await _authRepository.getUserId();
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print('Error during Google login: $e');
       return false;
     }
   }
