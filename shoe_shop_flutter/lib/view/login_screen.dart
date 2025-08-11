@@ -7,7 +7,7 @@ import '../data/viewModel/auth_view_model.dart';
 import '../routes/app_routes.dart';
 import '../utils/snack_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../utils/validator.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -55,9 +55,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  final GoogleSignIn googleSignIn = GoogleSignIn(
+  final googleSignIn = GoogleSignIn(
     scopes: ['email', 'openid'],
-    serverClientId: '421941018527-130sacf9uiknvln84uclaodnl83pf2jl.apps.googleusercontent.com',
+    serverClientId: dotenv.env['GOOGLE_SERVER_CLIENT_ID']!,
   );
 
   Future<void> _handleGoogleLogin() async {
@@ -67,20 +67,20 @@ class _LoginScreenState extends State<LoginScreen> {
       final GoogleSignInAccount? account = await googleSignIn.signIn();
 
       if (account == null) {
+        if (!mounted) return;
         SnackBarUtil.showSnackBar(context, 'Google Sign-In cancelled', Colors.orange);
         return;
       }
 
       final GoogleSignInAuthentication googleAuth = await account.authentication;
-      print('Access Token: ${googleAuth.accessToken}');
-      print('ID Token: ${googleAuth.idToken}');
       final String? idToken = googleAuth.idToken;
-
       if (idToken == null) {
+        if (!mounted) return;
         SnackBarUtil.showSnackBar(context, 'Failed to get Google ID token', Colors.red);
         return;
       }
 
+      if (!mounted) return;
       final authViewModel = context.read<AuthViewModel>();
       final bool isSuccess = await authViewModel.googleLogin(idToken);
 
@@ -93,7 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       print("Error google $e");
-      SnackBarUtil.showSnackBar(context, 'Error during Google login: $e', Colors.red);
+      if (mounted) {
+        SnackBarUtil.showSnackBar(context, 'Error during Google login: $e', Colors.red);
+      }
     } finally {
       if (mounted) {
         setState(() => isLoader = false);

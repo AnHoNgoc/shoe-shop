@@ -171,22 +171,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : const AssetImage("asset/images/default_avatar.png") as ImageProvider,
                               ),
                               SizedBox(width: 20.w),
-                              Text.rich(
-                                TextSpan(
-                                  text: "${user?.username ?? "Guest"}\n",
-                                  style: TextStyle(fontSize: 20.sp, color: AppColors.black),
-                                  children: [
-                                    TextSpan(
-                                      text: "Show profile",
-                                      style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: AppColors.black54,
+                              Expanded(  // Dùng Expanded để chiếm hết phần còn lại
+                                child: Text.rich(
+                                  TextSpan(
+                                    text: "${user?.username ?? "Guest"}\n",
+                                    style: TextStyle(fontSize: 18.sp, color: AppColors.black),
+                                    children: [
+                                      TextSpan(
+                                        text: "Show profile",
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: AppColors.black54,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              const Spacer(),
+                              SizedBox(width: 8.w), // Nếu muốn cách icon chút
                               Icon(
                                 _isProfileExpanded ? Icons.expand_less : Icons.arrow_forward_ios,
                                 size: 20.sp,

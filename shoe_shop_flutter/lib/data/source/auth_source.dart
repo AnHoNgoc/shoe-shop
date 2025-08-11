@@ -153,7 +153,7 @@ class AuthSource implements DataSource {
   @override
   Future<LoginResponse?> googleLogin(String idToken) async {
     try {
-      final String url = 'http://192.168.1.5:8080/shoe-shop${AppConstants.googleLoginEndpoint}'; // endpoint Google login
+      final String url = '${AppConstants.baseUrl}${AppConstants.googleLoginEndpoint}'; // endpoint Google login
       final uri = Uri.parse(url);
       final rs = await http.post(
         uri,
